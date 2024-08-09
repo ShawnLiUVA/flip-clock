@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Modern Flip Clock</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212; /* Dark grey background */
+            font-family: 'Arial', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        .date, .quote {
+            font-size: 7.5vw; /* Half the size of the clock */
+            color: #888888; /* Medium grey color */
+            margin-bottom: 1vh;
+        }
+        .clock {
+            display: flex;
+            gap: 1vw;
+            font-size: 15vw; /* Large font size for a bold, modern look */
+            font-weight: 300; /* Thin font weight for a sleek design */
+            margin-bottom: 2vh;
+        }
+        .flip {
+            position: relative;
+            display: inline-block;
+            width: 1em;
+            height: 1.5em;
+            text-align: center;
+        }
+        .flip .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: inherit;
+            color: #fff;
+            background-color: #1e1e1e; /* Darker grey background for digits */
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .flip .card .face {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s ease-in-out; /* Smooth transition for flip effect */
+        }
+        .flip .card .face.back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transform: rotateX(-180deg);
+        }
+        .flip .card.flip .face.front {
+            opacity: 0;
+            transform: rotateX(180deg);
+        }
+        .flip .card.flip .face.back {
+            opacity: 1;
+            transform: rotateX(0);
+        }
+        .colon {
+            display: flex;
+            align-items: center;
+            font-size: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="date" id="date"></div>
+    <div class="clock">
+        <div class="flip" id="hourTens">
+            <div class="card">
+                <div class="face front">0</div>
+                <div class="face back">0</div>
+            </div>
+        </div>
+        <div class="flip" id="hourOnes">
+            <div class="card">
+                <div class="face front">0</div>
+                <div class="face back">0</div>
+            </div>
+        </div>
+        <div class="colon">:</div>
+        <div class="flip" id="minuteTens">
+            <div class="card">
+                <div class="face front">0</div>
+                <div class="face back">0</div>
+            </div>
+        </div>
+        <div class="flip" id="minuteOnes">
+            <div class="card">
+                <div class="face front">0</div>
+                <div class="face back">0</div>
+            </div>
+        </div>
+        <div class="colon">:</div>
+        <div class="flip" id="secondTens">
+            <div class="card">
+                <div class="face front">0</div>
+                <div class="face back">0</div>
+            </div>
+        </div>
+        <div class="flip" id="secondOnes">
+            <div class="card">
+                <div class="face front">0</div>
+                <div class="face back">0</div>
+            </div>
+        </div>
+    </div>
+    <div class="quote">Time Flies!</div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const dateString = now.toDateString();
+
+            document.getElementById('date').textContent = dateString;
+
+            updateFlip('hourTens', hours[0]);
+            updateFlip('hourOnes', hours[1]);
+            updateFlip('minuteTens', minutes[0]);
+            updateFlip('minuteOnes', minutes[1]);
+            updateFlip('secondTens', seconds[0]);
+            updateFlip('secondOnes', seconds[1]);
+        }
+
+        function updateFlip(id, newValue) {
+            const flip = document.getElementById(id);
+            const currentFront = flip.querySelector('.face.front').textContent;
+            if (currentFront !== newValue) {
+                const card = flip.querySelector('.card');
+                card.classList.add('flip');
+                setTimeout(() => {
+                    flip.querySelector('.face.back').textContent = newValue;
+                    card.classList.remove('flip');
+                    setTimeout(() => {
+                        flip.querySelector('.face.front').textContent = newValue;
+                    }, 200);
+                }, 200);
+            }
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initialize clock
+    </script>
+</body>
+</html>
